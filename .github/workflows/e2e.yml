@@ -1,0 +1,23 @@
+name: Cypress Parallel Tests Run
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        parallel-group: [1, 2, 3] # Adjust the number according to your need
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress Tests in Parallel
+        run: npx cypress run --record --parallel --group job-$GITHUB_JOB --ci-build-id $GITHUB_RUN_ID
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }} # Cypress Dashboard Record Key
